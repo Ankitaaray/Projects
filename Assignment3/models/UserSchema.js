@@ -1,0 +1,8 @@
+const mongoose= require('mongoose')
+const UserSchema=({
+    name:{type:String, required:true},
+    password:{type:String, required:true},
+    email:String,
+    role:{type:String, enum:['user','admin'], default:'user'}
+})
+module.exports=mongoose.model('Users', UserSchema)

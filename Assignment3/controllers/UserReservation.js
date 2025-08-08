@@ -1,0 +1,24 @@
+const Reservation=require('../models/ResevationSchema');
+const Resource=require('../models/ResourceSchema');
+
+const get_all_reservation=async(req,res)=>{
+    const userID=req.user.userID;
+    const reservations=await Reservation.find({user:userID})
+    res.status(200).json({reservations})
+};
+const create_reservations=async(req,res)=>{
+    const userID=req.user.userID;
+    const {ResourceID, startTime, endTime}=req.body;
+    const resource=await Resource.findById(ResourceID)
+    if(!resource){
+        return res.status(404).json({msg:'Resource not found'});
+    }
+    const reservation=await Reservation.create({
+        ResourceID,
+        user:userID,
+        startTime,
+        endTime
+    });
+    res.status(200).json({reservation})
+};
+module.exports={get_all_reservation, create_reservations}
