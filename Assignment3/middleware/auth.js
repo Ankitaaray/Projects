@@ -12,10 +12,10 @@ const authMiddleware=async (req,res,next)=>{
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
         const {id, username,email,password,role}=decoded
         // req.user={id,username,email, password,role}
-        const user=
+        req.user={id,username,email,password,role}
         next()
     } catch (error) {
-        throw new customAPIError('Not authorised to access this route',401)
+        throw new customAPIError('Not authorised user',401)
     }
     next()
     
