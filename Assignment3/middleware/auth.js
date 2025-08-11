@@ -17,7 +17,6 @@ const authMiddleware=async (req,res,next)=>{
     } catch (error) {
         throw new customAPIError('Not authorised user',401)
     }
-    next()
     
 }
 module.exports=authMiddleware

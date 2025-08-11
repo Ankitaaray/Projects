@@ -57,6 +57,7 @@ const get_all_resource = async (req,res)=>{
     }
     catch(err){
         console.log(err);
+        res.status(200).json({msg:'Server error'})
     }
 }
 module.exports={

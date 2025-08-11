@@ -5,4 +5,4 @@ const ResourceSchema=({
         required:true
     }
 })
-module.exports=mongoose.model('Resource', ResourceSchema);
+module.exports= mongoose.model('Resource', ResourceSchema);

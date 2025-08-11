@@ -1,9 +1,11 @@
 const Users=require('../models/UserSchema')
 require('dotenv').config()
 const jwt=require('jsonwebtoken')
+const customAPIError=require('../errors/custom-error')
 
 const register=async(req,res,next)=>{
-    const{id,name, password, email,role}=req.body
+    console.log(req.body)
+    const{name, password, email,role}=req.body
     console.log('JWT_SECRET:',process.env.JWT_SECRET)
     if(!name||!password){
         throw new customAPIError('Please provide username & password',400)
