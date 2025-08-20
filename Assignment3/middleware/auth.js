@@ -1,5 +1,7 @@
 const jwt=require('jsonwebtoken')
 require('dotenv').config()
+const customAPIError=require('../errors/custom-error')
+
 const authMiddleware=async (req,res,next)=>{
     const authHeader=req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer')){

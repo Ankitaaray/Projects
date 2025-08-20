@@ -16,7 +16,6 @@ require('dotenv').config()
 const connect=async ()=>{
     try{
         await connectDB(process.env.MONGO_URL)
-        app.listen(port,()=>{console.log(`server running on port ${port}`)})
     }
     catch(err){
         console.log(err)
@@ -24,6 +23,8 @@ const connect=async ()=>{
     
 }
 connect()
+app.listen(port,()=>{console.log(`server running on port ${port}`)})
+
 app.use('/auth',auth_Routes)
 
 app.use('/resources',authMiddleware,authorizeRoles('admin'),Resouce_routes)
@@ -32,5 +33,4 @@ app.use('/reservations' ,authMiddleware,(req,res,next)=>{
     else if(req.user.role==='user'){return UserReservation.handle(req,res,next)}
     res.status(403).json({message:'Invalid Role'})
 })
-app.use('/user/reservations',authMiddleware,authorizeRoles('user'),UserReservation)
 
