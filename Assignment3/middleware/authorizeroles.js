@@ -1,4 +1,4 @@
-const customAPIError=require('../errors/custom-error')
+const customAPIError=require('../errors/customError')
 
 const authorizeRoles=(...roles)=>{
     return (req,res,next)=>{

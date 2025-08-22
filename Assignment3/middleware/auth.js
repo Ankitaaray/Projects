@@ -1,6 +1,7 @@
 const jwt=require('jsonwebtoken')
 require('dotenv').config()
-const customAPIError=require('../errors/custom-error')
+const customAPIError=require('../errors/customError')
+const { findUser } = require('../models/userPgSchema')
 
 const authMiddleware=async (req,res,next)=>{
     const authHeader=req.headers.authorization
@@ -12,9 +13,12 @@ const authMiddleware=async (req,res,next)=>{
 
     try {
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
-        const {id, username,email,password,role}=decoded
+        const {email}=decoded
+        const user=await findUser(email);
+
         // req.user={id,username,email, password,role}
-        req.user={id,username,email,password,role}
+        
+        req.user={id:user.id,username:user.name,email:user.email,password:user.password,role:user.role}
         next()
     } catch (error) {
         throw new customAPIError('Not authorised user',401)

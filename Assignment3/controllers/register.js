@@ -1,7 +1,7 @@
 const Users=require('../models/UserSchema')
 require('dotenv').config()
 const jwt=require('jsonwebtoken')
-const customAPIError=require('../errors/custom-error')
+const customAPIError=require('../errors/customError')
 
 const register=async(req,res,next)=>{
     console.log(req.body)

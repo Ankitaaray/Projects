@@ -1,4 +1,4 @@
-const customAPIError=require('../errors/custom-error')
+const customAPIError=require('../errors/customError')
 require('dotenv').config()
 const jwt=require('jsonwebtoken')
 const Users=require('../models/UserSchema')
