@@ -3,8 +3,10 @@ const { createServer } = require('node:http');
 const path = require('path');
 const port=3000
 const { Server } = require('socket.io');
+require('dotenv').config()
 
 const app = express();
+app.use(express.json())
 const server = createServer(app);
 const io = new Server(server);
 
@@ -21,7 +23,7 @@ io.on('connection', (socket) => {
 
     socket.on('createMessage', (message) => {
         console.log('New message:', message);
-        io.emit('newMessage', message); // Send to everyone
+        io.emit('newMessage', message); 
     });
 
     socket.on('disconnect', () => {
