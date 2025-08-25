@@ -4,8 +4,8 @@ const createTable=async()=>{
     await pool.query(`
         CREATE TABLE IF NOT EXISTS Users(
         id SERIAL PRIMARY KEY,
-        user_name VARCHAR(50)UNIQUE NOT NULL,
-        email VARCHAR(100)NOT NULL
+        user_name VARCHAR(50) NOT NULL,
+        email VARCHAR(100) UNIQUE NOT NULL
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `)
@@ -18,6 +18,17 @@ const getAllUsers=async()=>{
     .toString();
     const users=await pool.query(query);
     return users.rows;
+}
+
+const findUser=async(email)=>{
+    const query=squel
+    .select()
+    .from("Users")
+    .where("email=?", email)
+    .toString();
+
+    const user=await pool.query(query)
+    return user.rows[0]
 }
 
 const createUser=async(username,email)=>{
@@ -58,6 +69,7 @@ module.exports={
     getAllUsers,
     createUser,
     deleteUsers,
-    updateUser
+    updateUser,
+    findUser
 }
 

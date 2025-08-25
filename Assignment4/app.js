@@ -5,17 +5,15 @@ const port=3000
 const { Server } = require('socket.io');
 require('dotenv').config()
 const Message=require('./models/messages')
+const indexRoutes=require('./routes/indexRoutes')
 
 const app = express();
 app.use(express.json())
 const server = createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use('/',indexRoutes)
 
 io.on('connection', (socket) => {
     console.log('New user connected');
