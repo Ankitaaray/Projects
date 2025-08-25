@@ -4,6 +4,7 @@ const path = require('path');
 const port=3000
 const { Server } = require('socket.io');
 require('dotenv').config()
+const Message=require('./models/messages')
 
 const app = express();
 app.use(express.json())
@@ -19,7 +20,7 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    socket.emit('newMessage', { from: 'Server', text: 'Welcome!', createdAt: Date.now() });
+    // socket.emit('newMessage', { from: 'Server', text: 'Welcome!', createdAt: Date.now() });
 
     socket.on('createMessage', (message) => {
         console.log('New message:', message);

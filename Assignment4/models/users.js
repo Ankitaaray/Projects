@@ -1,4 +1,4 @@
-const {pool}= require("../db/connectpg")
+const {pool}= require("../db/connect")
 const squel=require('squel')
 const createTable=async()=>{
     await pool.query(`
