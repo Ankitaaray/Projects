@@ -32,11 +32,10 @@ const createUser= async(name,email,hashed_password,role)=>{
     .set("email",email)
     .set("password",hashed_password)
     .set("role", role)
-    .returning("*")
     .toString();
 
     console.log("final query:"+query)
-    const users=await pool.query(query)
+    const users=await pool.query(query+ "RETURNING *")
     console.log(users)
     return users.rows[0];
     
