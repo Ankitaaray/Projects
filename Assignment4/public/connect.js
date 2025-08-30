@@ -21,6 +21,7 @@
             e.preventDefault();
             if(sendBtn.disabled) return;
             const message = input.value;
+            
             socket.emit('createMessage', {
                 from: 'User',
                 text: message,
