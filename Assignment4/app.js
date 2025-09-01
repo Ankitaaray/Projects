@@ -7,15 +7,24 @@ require('dotenv').config()
 const Message=require('./models/messages')
 const indexRoutes=require('./routes/indexRoutes')
 const authRoutes= require('./routes/authRoutes');
+const authMiddleware = require('./middleware/auth');
+const userRoutes=require('./routes/userRoutes')
+const msgRoutes=require('./routes/messageRoutes')
+const {createTable}=require('./models/users')
+const createMsg=require('./models/messages')
 
 const app = express();
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")));
 const server = createServer(app);
 const io = new Server(server);
-app.use('/auth',authRoutes)
 
+createTable()
+createMsg.createTable()
+app.use('/auth',authRoutes)
 app.use('/',indexRoutes)
+app.use('/users',authMiddleware,userRoutes)
+app.use('/messages',authMiddleware,msgRoutes)
 
 io.on('connection', (socket) => {
     console.log('New user connected');

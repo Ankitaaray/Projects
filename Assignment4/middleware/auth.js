@@ -6,7 +6,7 @@ const { findUser } = require('../models/users')
 const authMiddleware=async (req,res,next)=>{
     const authHeader=req.headers.authorization
     if(!authHeader || !authHeader.startsWith('Bearer')){
-        return res.redirect("/login.html")
+        throw new customAPIError("Unauthorized User", 401);
     }
 
     const token=authHeader.split(' ')[1]
@@ -19,7 +19,7 @@ const authMiddleware=async (req,res,next)=>{
         req.user={id:user.id,username:user.user_name,email:user.email,password:user.password}
         next()
     } catch (error) {
-        return res.redirect("/login.html")
+        throw new customAPIError("Unauthorised user", 401)
     }
     
 }

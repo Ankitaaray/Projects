@@ -5,7 +5,7 @@ const createTable=async()=>{
         CREATE TABLE IF NOT EXISTS Users(
         id SERIAL PRIMARY KEY,
         user_name VARCHAR(50) NOT NULL,
-        email VARCHAR(100) UNIQUE NOT NULL
+        email VARCHAR(100) UNIQUE NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `)
@@ -52,24 +52,12 @@ const deleteUsers=async(id)=>{
     return user.rows[0];
 }
 
-const updateUser=async(id,name)=>{
-    const query=squel
-    .update()
-    .table("Users")
-    .set("user_name", name)
-    .where("id=?",id)
-    .toString();
-
-    const user= await pool.query(query+ "RETURNING *");
-    return user.rows[0];
-}
 
 module.exports={
     createTable,
     getAllUsers,
     createUser,
     deleteUsers,
-    updateUser,
     findUser
 }
 

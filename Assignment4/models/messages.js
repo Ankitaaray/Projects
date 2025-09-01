@@ -5,6 +5,7 @@ const createTable=async()=>{
         CREATE TABLE IF NOT EXISTS Messages(
         id SERIAL PRIMARY KEY,
         user_id INT NOT NULL,
+        user_name VARCHAR(50) NOT NULL,
         message TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -21,11 +22,12 @@ const getAllMessages=async()=>{
     return messages.rows;
 }
 
-const saveMessage=async(user_id, message)=>{
+const saveMessage=async(user_id, user_name, message)=>{
     const query=squel
     .insert()
     .into("Messages")
     .set("user_id", user_id)
+    .set("user_name", user_name)
     .set("message", message)
     .toString();
     const messages=await pool.query(query+ "RETURNING *")
