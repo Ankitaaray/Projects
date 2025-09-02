@@ -56,7 +56,7 @@
 
         const time = document.createElement("div");
         time.classList.add("small", "text-muted", "mt-1", "align-self-end");
-        time.textContent = new Date(m.createdAt || Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        time.textContent = new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
         li.appendChild(header);
         li.appendChild(body);
