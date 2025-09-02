@@ -21,7 +21,7 @@
     }).then(data=>{
         userName=data.username;
         userId=data.id;
-        document.getElementById("username").textContent="Looged in as: " +data.username;
+        document.getElementById("username").textContent=data.username;
     }).catch(err=>{
         console.error("Auth failed:",err);
         window.location.href="/login.html"
