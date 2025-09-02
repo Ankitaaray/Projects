@@ -46,7 +46,9 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">💬 ChatApp</a>
+      <a class="navbar-brand fw-bold" href="#">
+        <img src="images/appLogo2.png" alt="appLogo" class="img-fluid me-2" style="max-height: 45px; background: transparent;">
+        <span class="fw-bold">ChatApp</span></a>
       <div class="d-flex align-items-center">
         <span class="text-white me-3" id="username">Logged in as: User</span>
         <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
@@ -58,8 +60,8 @@
   <div class="container my-3 flex-grow-1 d-flex flex-column">
     <ul id="messages" class="list-group flex-grow-1 overflow-auto mb-3 border rounded shadow-sm p-2"></ul>
     
-    <form id="message-form" class="input-group">
-      <input type="text" id="message-input" class="form-control" placeholder="Type a message..." autocomplete="off">
+    <form id="message-form" class="input-group d-flex p-2 border-top mb-3">
+      <input type="text" id="message-input" class="form-control me-2" placeholder="Type a message..." autocomplete="off">
       <button id="sendBtn" type="submit" class="btn btn-primary">Send</button>
     </form>
   </div>
