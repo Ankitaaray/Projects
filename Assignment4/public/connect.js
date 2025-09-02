@@ -44,25 +44,39 @@
     messages.innerHTML=" ";
     msg.forEach(m => {
         const li= document.createElement('li');
-        li.textContent=`${m.user_name}:${m.message}`;
-        if(m.user_id===userId){
-            li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "bg-primary", "text-white", "align-self-end")
-            li.style.maxWidth = "70%";
+        li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "d-flex", "flex-column");
+        li.style.maxWidth = "70%";
+
+        const header=document.createElement("div");
+        header.classList.add("small","fw-bold", "mb-1");
+        header.textContent=m.user_name;
+
+        const body = document.createElement("div");
+        body.textContent = m.message;
+
+        const time = document.createElement("div");
+        time.classList.add("small", "text-muted", "mt-1", "align-self-end");
+        time.textContent = new Date(m.createdAt || Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+        li.appendChild(header);
+        li.appendChild(body);
+        li.appendChild(time);
+        
+        if(Number(m.user_id)===Number(userId)){
+            li.classList.add("bg-primary", "text-white", "align-self-end");
             li.style.marginLeft = "auto"; 
         }
         else{
-            li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "bg-light", "text-dark", "align-self-start")
-            li.style.maxWidth = "70%";
-            li.style.marginRight = "auto"
+            li.classList.add("bg-light", "text-dark", "align-self-start");
+            li.style.marginRight = "auto";
         }
         messages.appendChild(li);
         messages.scrollTop=messages.scrollHeight;
     });
    }
 
-   
-  // Sending messages
-   function updateBtn(){
+  
+  function updateBtn(){
     sendBtn.disabled=input.value.trim().length===0;
    }
    updateBtn();
@@ -72,10 +86,25 @@
         });
         socket.on('newMessage', (message) => {
             const li = document.createElement('li');
-            li.textContent = `${message.from}: ${message.text}`;
-
-            li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "bg-primary", "text-white", "align-self-end");
+            li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "d-flex", "flex-column");
             li.style.maxWidth = "70%";
+
+            const header=document.createElement("div");
+            header.classList.add("small","fw-bold", "mb-1");
+            header.textContent=message.from
+
+            const body = document.createElement("div");
+            body.textContent = message.text;
+
+            const time = document.createElement("div");
+            time.classList.add("small", "text-muted", "mt-1", "align-self-end");
+            time.textContent = new Date(Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+            li.appendChild(header);
+            li.appendChild(body);
+            li.appendChild(time);
+
+            li.classList.add("bg-primary", "text-white", "align-self-end");
             li.style.marginLeft = "auto"; 
             messages.appendChild(li);
             messages.scrollTop=messages.scrollHeight;
