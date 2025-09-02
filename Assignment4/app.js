@@ -20,6 +20,7 @@ const server = createServer(app);
 const io = new Server(server);
 
 createTable()
+
 createMsg.createTable()
 app.use('/auth',authRoutes)
 app.use('/',indexRoutes)

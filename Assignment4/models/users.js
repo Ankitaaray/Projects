@@ -6,6 +6,7 @@ const createTable=async()=>{
         id SERIAL PRIMARY KEY,
         user_name VARCHAR(50) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
+        password TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `)
@@ -31,12 +32,13 @@ const findUser=async(email)=>{
     return user.rows[0]
 }
 
-const createUser=async(username,email)=>{
+const createUser=async(username,email,password)=>{
     const query=squel
     .insert()
     .into("Users")
     .set("user_name", username)
     .set("email", email)
+    .set("password",password)
     .toString();
     const user=await pool.query(query+ "RETURNING *")
     return user.rows[0];

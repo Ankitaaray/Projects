@@ -7,7 +7,8 @@ const createTable=async()=>{
         user_id INT NOT NULL,
         user_name VARCHAR(50) NOT NULL,
         message TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
         );
     `)
     
