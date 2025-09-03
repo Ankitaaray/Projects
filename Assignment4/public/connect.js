@@ -104,8 +104,16 @@
             li.appendChild(body);
             li.appendChild(time);
 
-            li.classList.add("bg-primary", "text-white", "align-self-end");
-            li.style.marginLeft = "auto"; 
+            // li.classList.add("bg-primary", "text-white", "align-self-end");
+            // li.style.marginLeft = "auto"; 
+            if(Number(message.u_id)===Number(userId)){
+                li.classList.add("bg-primary", "text-white", "align-self-end");
+                li.style.marginLeft = "auto";
+            }
+            else{
+                li.classList.add("bg-light", "text-dark", "align-self-start");
+                li.style.marginRight = "auto";
+            }
             messages.appendChild(li);
             messages.scrollTop=messages.scrollHeight;
         });
@@ -117,6 +125,7 @@
             socket.emit('createMessage', {
                 from: userName,
                 text: message,
+                u_id:userId,
                 createdAt: Date.now()
             });
 
