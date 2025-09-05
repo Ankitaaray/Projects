@@ -1,6 +1,7 @@
    const socket = io();
    let userName=null;
    let userId=null;
+   const getAllUsers=null;
 
    const input=document.getElementById("message-input")
    const form=document.getElementById("message-form")
@@ -28,6 +29,25 @@
     })
 
 
+    fetch("/users",{
+        headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+    }).then(res=>res.json()).then(data=>{
+        const userList=document.getElementById("user-list");
+        userList.innerHTML=" ";
+        data.forEach(user=>{
+            const li=document.createElement("li");
+            li.className="list-group-item list-group-item-action py-3 px-3 d-flex align-items-canter";
+            li.innerHTML=`
+            <i class="fa-solid fa-user-circle me-2 text primary" style="color:#0c73a6;"></i>
+            <span class="fw-bold">${user.user_name}</span>`;
+            li.dataset.user_id=user.id;
+            userList.appendChild(li);
+        });
+        getAllUsers=data;
+    }).catch(er=>{
+        console.error("Error fetching users",err);
+    })
+    
     //getting message history
     fetch("/messages",{
         headers:{
@@ -104,8 +124,6 @@
             li.appendChild(body);
             li.appendChild(time);
 
-            // li.classList.add("bg-primary", "text-white", "align-self-end");
-            // li.style.marginLeft = "auto"; 
             if(Number(message.u_id)===Number(userId)){
                 li.classList.add("bg-primary", "text-white", "align-self-end");
                 li.style.marginLeft = "auto";

@@ -1,9 +1,9 @@
 const msgModel=require('../models/messages')
 
 const saveMessage=async(req,res)=>{
-    const {id,user_name,message}=req.body;
+    const {id,user_name,message,receiver_id}=req.body;
     try{
-        const Message=await msgModel.saveMessage(id,user_name, message);
+        const Message=await msgModel.saveMessage(id,user_name, message,receiver_id);
         res.status(201).json(Message)
     }
     catch(err){
@@ -33,11 +33,23 @@ const deleteMessage=async (req,res)=>{
         res.status(500).json({msg:err.message});
     }
 }
+const getUserMessages=async(req,res)=>{
+    const {id}=req.params;
+    const{receiver_id}=req.body;
+    try{
+        const message=await msgModel.getUserMessages(id,receiver_id);
+        res.status(200).json(message);
+    }
+    catch(err){
+        res.status(500).json({msg:err.message});
+    }
+}
 
 
 module.exports={
     getAllMessages,
     saveMessage,
-    deleteMessage
+    deleteMessage,
+    getUserMessages
 }
 
