@@ -35,7 +35,7 @@ const deleteMessage=async (req,res)=>{
 }
 const getUserMessages=async(req,res)=>{
     const {id}=req.params;
-    const{receiver_id}=req.body;
+    const{receiver_id}=req.query;
     try{
         const message=await msgModel.getUserMessages(id,receiver_id);
         res.status(200).json(message);

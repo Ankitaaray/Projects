@@ -27,34 +27,47 @@ app.use('/',indexRoutes)
 app.use('/users',authMiddleware,userRoutes)
 app.use('/messages',authMiddleware,msgRoutes)
 
+let onlineUsers={};
+
 io.on('connection', (socket) => {
     console.log('New user connected');
-    let onlineUsers={};
+    
 
     // socket.emit('newMessage', { from: 'Server', text: 'Welcome!', createdAt: Date.now() });
 
-    socket.on("register",(userId)=>{
-        onlineUsers[userId]=socket.id;
+    socket.on("register",({userId,userName})=>{
+        console.log("User:", userId)
+        onlineUsers[userId]={socketId:socket.id, userName};
         console.log("Registered user:", userId, "socket id:", socket.id)
     })
 
-    socket.on("privateMessage",({senderId,receiverId,message})=>{
-        const receiverSocketId=onlineUsers[receiverId];
-        if(receiverSocketId){
-            io.to(receiverSocketId).emit("PrivateMessage",{
-                senderId,
-                message,
-                created_at:new Date()
-            });
-        }
-    });
+socket.on("privateMessage", ({ senderId, receiverId, message }) => {
+    const receiver = onlineUsers[receiverId];
+    const sender = onlineUsers[senderId];
 
-    socket.on('createMessage', (message) => {
-        console.log('New message:', message);
-        io.emit('newMessage', message); 
-    });
+    const msgData = {
+        senderId,
+        senderName: sender?.userName || "Unknown",
+        message,
+        created_at: new Date()
+    };
+
+    if (receiver) {
+        io.to(receiver.socketId).emit("privateMessage", msgData);
+    }
+
+    socket.emit("privateMessage", msgData); 
+});
+
+   
 
     socket.on('disconnect', () => {
+        for(let uid in onlineUsers){
+            if(onlineUsers[uid]===socket.id){
+                delete onlineUsers[uid];
+                break;
+            }
+        }
         console.log('User disconnected');
     });
 });

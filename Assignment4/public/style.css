@@ -11,6 +11,7 @@
     
     #chat-container {
       margin-left: 250px; 
+      margin-top: 70px;
       height: calc(100vh - 56px);
       display: flex;
       flex-direction: column;

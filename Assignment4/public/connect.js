@@ -1,6 +1,7 @@
    const socket = io();
    let userName=null;
    let userId=null;
+   let receiverId=null;
    const getAllUsers=null;
 
    const input=document.getElementById("message-input")
@@ -22,11 +23,13 @@
     }).then(data=>{
         userName=data.username;
         userId=data.id;
+        socket.emit("register", {userId,userName});
         document.getElementById("username").textContent=data.username;
     }).catch(err=>{
         console.error("Auth failed:",err);
         window.location.href="/login.html"
     })
+    
 
 
     fetch("/users",{
@@ -35,30 +38,52 @@
         const userList=document.getElementById("user-list");
         userList.innerHTML=" ";
         data.forEach(user=>{
-            const li=document.createElement("li");
+            if(user.id!=userId){
+                const li=document.createElement("li");
             li.className="list-group-item list-group-item-action py-3 px-3 d-flex align-items-canter";
             li.innerHTML=`
             <i class="fa-solid fa-user-circle me-2 text primary" style="color:#0c73a6;"></i>
             <span class="fw-bold">${user.user_name}</span>`;
             li.dataset.user_id=user.id;
             userList.appendChild(li);
+            }
+            
         });
         getAllUsers=data;
     }).catch(er=>{
         console.error("Error fetching users",err);
     })
+    document.getElementById("user-list").addEventListener("click", (e)=>{
+        let target=e.target;
+        if(target.tagName!=="LI"){
+            target=target.closest("li");
+        }
+        
+            receiverId=target.dataset.user_id;
+            console.log("Clicked user id:", receiverId);
+
+            fetch(`/messages/${userId}?receiver_id=${receiverId}`, {
+    method: "GET",
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token"),
+        "Content-Type": "application/json"
+    }
+})
+.then(res => res.json())
+.then(data => renderMessage(data))
+.catch(err => console.error("Error fetching messages", err));
+
+
+
+        
+    })
+    
     
     //getting message history
-    fetch("/messages",{
-        headers:{
-            "Authorization": "Bearer "+localStorage.getItem("token")
-        }
-    }).then(res=>{
-        if(!res.ok)throw new Error("failed to fetch messages");
-            return res.json();
-    })
-    .then(data=>renderMessage(data))
-    .catch(err=>console.error("failed to save:", err));
+
+
+
+
 
    function renderMessage(msg){
     messages.innerHTML=" ";
@@ -94,8 +119,8 @@
         messages.scrollTop=messages.scrollHeight;
     });
    }
+   console.log("UserId from connect:",userId)
 
-  
   function updateBtn(){
     sendBtn.disabled=input.value.trim().length===0;
    }
@@ -104,17 +129,17 @@
         socket.on('connect', () => {
             console.log('Connected to server');
         });
-        socket.on('newMessage', (message) => {
+        socket.on('privateMessage', (message) => {
             const li = document.createElement('li');
             li.classList.add("list-group-item", "mb-2", "p-2", "rounded", "d-flex", "flex-column");
             li.style.maxWidth = "70%";
 
             const header=document.createElement("div");
             header.classList.add("small","fw-bold", "mb-1");
-            header.textContent=message.from
+            header.textContent=message.senderName
 
             const body = document.createElement("div");
-            body.textContent = message.text;
+            body.textContent = message.message;
 
             const time = document.createElement("div");
             time.classList.add("small", "text-muted", "mt-1", "align-self-end");
@@ -124,7 +149,7 @@
             li.appendChild(body);
             li.appendChild(time);
 
-            if(Number(message.u_id)===Number(userId)){
+            if(Number(message.senderId)===Number(userId)){
                 li.classList.add("bg-primary", "text-white", "align-self-end");
                 li.style.marginLeft = "auto";
             }
@@ -140,10 +165,10 @@
             if(sendBtn.disabled) return;
             const message = input.value;
             
-            socket.emit('createMessage', {
-                from: userName,
-                text: message,
-                u_id:userId,
+            socket.emit('privateMessage', {
+                senderId: userId,
+                receiverId: receiverId,
+                message:message,
                 createdAt: Date.now()
             });
 
@@ -159,7 +184,8 @@
                 body: JSON.stringify({
                     id:userId,
                     user_name:userName,
-                    message:message
+                    message:message,
+                    receiver_id:receiverId
                 })
             }).catch(err=>console.error("failed to save:", err));
             input.value = '';
