@@ -79,7 +79,11 @@
     })
     
     
-    //getting message history
+    // grouping users
+
+    document.getElementById("createGroupBtn").addEventListener("click",()=>{
+
+    })
 
 
 

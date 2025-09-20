@@ -7,8 +7,11 @@ const createTable=async()=>{
         user_id INT NOT NULL,
         user_name VARCHAR(50) NOT NULL,
         message TEXT NOT NULL,
-        receiver_id INT NOT NULL,
+        receiver_id INT,
+        grp_id INT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CHECK (grp_id IS NULL OR receiver_id IS NULL),
+        FOREIGN KEY (grp_id) REFERENCES Groups(id) ON DELETE CASCADE,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
         FOREIGN KEY (receiver_id) REFERENCES Users(id) ON DELETE CASCADE
         );
@@ -59,11 +62,22 @@ const getUserMessages=async(user_id,receiver_id)=>{
     return messages.rows;
 }
 
+const getGrpMessages=async(grp_id)=>{
+    const query=squel
+    .select()
+    .from("Messages")
+    .where("grp_id=?",grp_id)
+    .toString();
+    const messages=await pool.query(query);
+    return messages.rows
+}
+
 
 module.exports={
     createTable,
     saveMessage,
     deleteMessage,
     getAllMessages,
-    getUserMessages
+    getUserMessages,
+    getGrpMessages
 }

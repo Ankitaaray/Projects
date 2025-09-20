@@ -44,12 +44,23 @@ const getUserMessages=async(req,res)=>{
         res.status(500).json({msg:err.message});
     }
 }
+const getGrpMessages=async(req,res)=>{
+    const {id}=req.params;
+    try{
+        const message=await msgModel.getGrpMessages(id);
+        res.status(200).json(message);
+    }
+    catch(err){
+        res.status(500).json({msg:err.message});
+    }
+}
 
 
 module.exports={
     getAllMessages,
     saveMessage,
     deleteMessage,
-    getUserMessages
+    getUserMessages,
+    getGrpMessages
 }
 

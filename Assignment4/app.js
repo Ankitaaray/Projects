@@ -10,8 +10,10 @@ const authRoutes= require('./routes/authRoutes');
 const authMiddleware = require('./middleware/auth');
 const userRoutes=require('./routes/userRoutes')
 const msgRoutes=require('./routes/messageRoutes')
+const grpRoutes=require('./routes/grpRoutes')
 const {createTable}=require('./models/users')
 const createMsg=require('./models/messages')
+const createGrp=require('./models/grp')
 
 const app = express();
 app.use(express.json())
@@ -19,13 +21,16 @@ app.use(express.static(path.join(__dirname, "public")));
 const server = createServer(app);
 const io = new Server(server);
 
-createTable()
+createTable();
+createMsg.createTable();
+createGrp.createTable();
 
-createMsg.createTable()
+
 app.use('/auth',authRoutes)
 app.use('/',indexRoutes)
 app.use('/users',authMiddleware,userRoutes)
 app.use('/messages',authMiddleware,msgRoutes)
+app.use('/groups',authMiddleware,grpRoutes)
 
 let onlineUsers={};
 
